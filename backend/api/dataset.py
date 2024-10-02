@@ -19,16 +19,16 @@ class CustomDataset(Dataset):
         self.tokenizer = tokenizer
         self.img_dir_path = img_dir_path 
 
-        self.imgs, self.prompts = [], []
+        self.imgs, self.prompt = [], prompt
         for img in list(Path(img_dir_path).iterdir()):
             img = Image.open(img).convert("RGB")
             self.imgs.append(img)
 
-            pixel_values = processor(images=img, return_tensors="pt").to("cuda").pixel_values
-            generated_ids = model.generate(pixel_values=pixel_values, max_length=50)
-            generated_caption = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
+            # pixel_values = processor(images=img, return_tensors="pt").to("cuda").pixel_values
+            # generated_ids = model.generate(pixel_values=pixel_values, max_length=50)
+            # generated_caption = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
 
-            self.prompts.append(generated_caption)
+            # self.prompts.append(prompt)
         self.n = len(self.imgs)
         self.img_transforms = transforms.Compose([transforms.ToTensor(), transforms.Normalize([0.5], [0.5])])
     
@@ -39,7 +39,7 @@ class CustomDataset(Dataset):
         return {
             "img": self.img_transforms(self.imgs[i % self.n]), 
             "prompt": self.tokenizer(
-                self.prompts[i % self.n],
+                self.prompt,
                 truncation=True,
                 padding="do_not_pad",
                 max_length=self.tokenizer.model_max_length,
