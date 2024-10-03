@@ -4,8 +4,13 @@ from pathlib import Path
 from matplotlib import pyplot as plt 
 from transformers import CLIPTokenizer
 
-BASE_DIR = Path(__file__).resolve().parent
 SDV1_5 = "runwayml/stable-diffusion-v1-5"
+OFA = "OFA-Sys/small-stable-diffusion-v0"
+SDM = "stabilityai/stable-diffusion-3-medium"
+SDXL = "stabilityai/stable-diffusion-xl-base-1.0"
+SDM_REFINER = "stabilityai/stable-diffusion-3-refiner"
+
+BASE_DIR = Path(__file__).resolve().parent
 default_tokenizer = CLIPTokenizer.from_pretrained(SDV1_5, subfolder="tokenizer")
 
 def display(imgs, r, c=-1, w=3, h=3):
