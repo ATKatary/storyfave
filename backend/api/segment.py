@@ -59,7 +59,13 @@ def visualize_boxes(img, boxes, prompt, size=(3, 3), model="dino"):
             confidence=boxes['scores'].cpu().detach().numpy()
         ).with_nms(threshold=0.1)
 
-        labels = boxes['labels']
+        labels = labels = [
+            f"{class_id} {confidence:0.3f}"
+
+            for class_id, confidence
+            in zip(detections.class_id, detections.confidence)
+        ]
+
     elif model == "yolo":
         prompt = prompt.split(" ")
         detections = sv.Detections.from_inference(boxes).with_nms(threshold=0.1)
