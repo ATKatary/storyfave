@@ -9,6 +9,7 @@ SDV1_5 = "runwayml/stable-diffusion-v1-5"
 default_tokenizer = CLIPTokenizer.from_pretrained(SDV1_5, subfolder="tokenizer")
 
 def display(imgs, r, c=-1, w=3, h=3):
+    """ Display images in a grid """
     n = len(imgs)
     if c == -1: c = math.ceil(n / r)
 

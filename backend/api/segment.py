@@ -38,6 +38,7 @@ BOUNDING_BOX_ANNOTATOR = sv.BoundingBoxAnnotator(thickness=2)
 LABEL_ANNOTATOR = sv.LabelAnnotator(text_thickness=2, text_scale=1, text_color=sv.Color.BLACK)
 
 def visualize_boxes(img, boxes, prompt, size=(3, 3), model="dino"):
+    """ Draws the predicted bounding boxes and labels on the image """
     if model == "dino":
         xyxy = np.zeros(boxes['boxes'].shape)
 

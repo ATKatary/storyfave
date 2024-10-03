@@ -47,6 +47,7 @@ class CustomDataset(Dataset):
         }
 
 def collate_fn(x):
+    """ stacks images and prompts enabling us to load data in batches """
     img = torch.stack([x_i["img"] for x_i in x]).to(memory_format=torch.contiguous_format).float()
     
     input_ids = {"input_ids": [x_i["prompt"] for x_i in x]}

@@ -4,7 +4,8 @@ from PIL import Image
 import matplotlib.pyplot as plt
 from transformers import SamModel, SamProcessor
 
-def get_masks(img, boxes, device="cuda"):
+def get_masks(img, boxes, model="sam", device="cuda"):
+    """ Runs SAM to get the predicted masks and scores """
     if len(boxes[0]) == 0: return 
 
     model_id = "facebook/sam-vit-huge"
@@ -29,6 +30,7 @@ def get_masks(img, boxes, device="cuda"):
     return {'masks': masks, 'scores': scores}
 
 def show_mask(mask, ax, random_color=False):
+    """ Displays a predicted mask on the image """
     if random_color:
         color = np.concatenate([np.random.random(3), np.array([0.6])], axis=0)
     else:
@@ -39,6 +41,7 @@ def show_mask(mask, ax, random_color=False):
     ax.imshow(mask_image)
 
 def show_masks_on_image(raw_image, masks, scores):
+    """ Displays all predicted masks on the image """
     if len(masks.shape) == 4: masks = masks.squeeze()
     if scores.shape[0] == 1: scores = scores.squeeze()
 
