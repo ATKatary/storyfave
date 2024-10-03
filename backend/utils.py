@@ -7,11 +7,11 @@ BASE_DIR = Path(__file__).resolve().parent
 SDV1_5 = "runwayml/stable-diffusion-v1-5"
 default_tokenizer = CLIPTokenizer.from_pretrained(SDV1_5, subfolder="tokenizer")
 
-def display(imgs, r, c=-1):
+def display(imgs, r, c=-1, w=3, h=3):
     n = len(imgs)
     if c == -1: c = math.ceil(r / n)
 
-    fig = plt.figure(figsize=(3*c, 3)) 
+    fig = plt.figure(figsize=(w*c, h)) 
     fig.add_subplot(r, c, 1)
     fig.patch.set_visible(False)
 
