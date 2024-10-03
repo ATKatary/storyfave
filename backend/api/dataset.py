@@ -1,11 +1,11 @@
 import os
 import torch
 import numpy as np
-from utils import *
 from PIL import Image
 from pathlib import Path
 from torchvision import transforms
 from torch.utils.data import Dataset
+from storyfave.backend.utils import *
 from transformers import AutoProcessor
 from transformers import AutoModelForCausalLM
 
