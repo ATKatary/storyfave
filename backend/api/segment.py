@@ -39,16 +39,29 @@ LABEL_ANNOTATOR = sv.LabelAnnotator(text_thickness=2, text_scale=1, text_color=s
 
 def visualize_boxes(img, boxes, prompt, size=(3, 3), model="dino"):
     if model == "dino":
-        boxes = boxes['boxes'].cpu().detach().numpy()
-        labels = boxes['labels']
+        xyxy = np.zeros(boxes['boxes'].shape)
 
+        n = boxes['boxes'].shape[0]
+        for i in range(n):
+          for j in range(4):
+            xyxy[i][j] = boxes['boxes'][i][j].item()
+
+        class_map = {}
+        class_id = np.zeros((n,), dtype=np.int64)
+        for i in range(n):
+          if boxes['labels'][i] not in class_map:
+            class_map[boxes['labels'][i]] = len(class_map)
+          class_id[i] = class_map[boxes['labels'][i]]
+        
         detections = sv.Detections(
-            xyxy=boxes,
-            class_id=labels,
+            xyxy=xyxy,
+            class_id=class_id,
             confidence=boxes['scores'].cpu().detach().numpy()
         ).with_nms(threshold=0.1)
+
+        labels = boxes['labels']
     elif model == "yolo":
-        prompt = prompt.prompt.split(" ")
+        prompt = prompt.split(" ")
         detections = sv.Detections.from_inference(boxes).with_nms(threshold=0.1)
         labels = [
             f"{prompt[class_id]} {confidence:0.3f}"
@@ -58,7 +71,6 @@ def visualize_boxes(img, boxes, prompt, size=(3, 3), model="dino"):
         ]
     else: raise ValueError("invalid model")
 
-    
     annotated_image = img.copy()
     annotated_image = BOUNDING_BOX_ANNOTATOR.annotate(annotated_image, detections)
     annotated_image = LABEL_ANNOTATOR.annotate(annotated_image, detections, labels=labels)
