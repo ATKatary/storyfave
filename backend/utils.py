@@ -16,7 +16,7 @@ def display(imgs, r):
 
     for i in range(r):
         for j in range(c):
-            fig.add_subplot(r, c, i*r + j) 
+            fig.add_subplot(r, c, i*r + j + 1) 
             
             plt.imshow(imgs[i*r + j]['img']) 
             plt.axis('off') 
