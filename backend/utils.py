@@ -20,5 +20,4 @@ def display(imgs, r, c=-1, w=3, h=3):
         plt.imshow(imgs[i]['img']) 
         plt.axis("tight")
         plt.title(imgs[i]['label'])
-    plt.axis("off")
 
