@@ -1,9 +1,10 @@
 import torch
-from utils import *
 from tqdm import tqdm
 import torch.nn.functional as F
+from storyfave.backend.utils import *
 from transformers import CLIPTextModel
-from diffusers import AutoencoderKL, UNet2DConditionModel, DDPMScheduler
+from storyfave.backend.api.lora import *
+from diffusers import AutoencoderKL, UNet2DConditionModel, DDPMScheduler, StableDiffusionPipeline
 
 class SD(torch.nn.Module):
 
@@ -38,6 +39,19 @@ class SD(torch.nn.Module):
         self.vae.to(device, dtype=self.dtype)
         self.unet.to(device, dtype=self.dtype)
         self.text_encoder.to(device, dtype=self.dtype)
+    
+    def save(self, accelerator, out_fn="lora_weight"):
+        pipeline = StableDiffusionPipeline.from_pretrained(
+            self.model_id,
+            unet=accelerator.unwrap_model(self.unet),
+            text_encoder=accelerator.unwrap_model(self.text_encoder),
+        )
+        loras = {
+            "unet": (pipeline.unet, DEFAULT_TARGET_REPLACE)
+        }
+
+        save_safeloras(loras, f"{BASE_DIR}/saved/{out_fn}.safetensors")
+        save_lora_weight(pipeline.unet, f"{BASE_DIR}/saved/{out_fn}.pt")
 
 def train_epoch(sd, data_loader, accelerator, optimizer, lr_scheduler, progress_bar):
     for i, batch in enumerate(data_loader):
@@ -53,4 +67,3 @@ def train_epoch(sd, data_loader, accelerator, optimizer, lr_scheduler, progress_
         
         progress_bar.update(1)
         progress_bar.set_postfix({"loss": loss.detach().item(), "lr": lr_scheduler.get_last_lr()[0]})
-
