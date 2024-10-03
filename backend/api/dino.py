@@ -13,16 +13,9 @@ def get_bounding_boxes(img, prompt, model="dino", device="cuda"):
 
         processed_img = processor(images=img, text=prompt, return_tensors="pt").to(device)
 
-        with torch.no_grad(): prediction = model(**processed_img)
-
-        return processor.post_process_grounded_object_detection(
-            prediction,
-            processed_img.input_ids,
-
-            box_threshold=0.4,
-            text_threshold=0.3,
-            target_sizes=[img.size[::-1]]
-        )
+        with torch.no_grad(): 
+            return model(**processed_img)
+        
     elif model == "yolo":
         model = YOLOWorld(model_id="yolo_world/l")
 
