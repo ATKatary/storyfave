@@ -59,23 +59,20 @@ def visualize_boxes(img, boxes, prompt, size=(3, 3), model="dino"):
             confidence=boxes['scores'].cpu().detach().numpy()
         ).with_nms(threshold=0.1)
 
-        labels = labels = [
-            f"{class_id} {confidence:0.3f}"
-
-            for class_id, confidence
-            in zip(detections.class_id, detections.confidence)
-        ]
+        prompt = [0]*len(class_map)
+        for k, v in class_map.items():
+          prompt[v] = k
 
     elif model == "yolo":
         prompt = prompt.split(" ")
         detections = sv.Detections.from_inference(boxes).with_nms(threshold=0.1)
-        labels = [
-            f"{prompt[class_id]} {confidence:0.3f}"
-
-            for class_id, confidence
-            in zip(detections.class_id, detections.confidence)
-        ]
     else: raise ValueError("invalid model")
+    labels = [
+        f"{prompt[class_id]} {confidence:0.3f}"
+
+        for class_id, confidence
+        in zip(detections.class_id, detections.confidence)
+    ]
 
     annotated_image = img.copy()
     annotated_image = BOUNDING_BOX_ANNOTATOR.annotate(annotated_image, detections)
