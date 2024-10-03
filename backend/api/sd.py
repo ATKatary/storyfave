@@ -7,7 +7,6 @@ from storyfave.backend.api.lora import *
 from diffusers import AutoencoderKL, UNet2DConditionModel, DDPMScheduler, StableDiffusionPipeline
 
 class SD(torch.nn.Module):
-
     def __init__(self, model_id=SDV1_5, tokenizer=default_tokenizer, dtype = torch.float32):
         super(SD, self).__init__()
         self.dtype = dtype
