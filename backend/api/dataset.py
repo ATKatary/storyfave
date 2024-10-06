@@ -3,9 +3,9 @@ import torch
 import numpy as np
 from PIL import Image
 from pathlib import Path
-from rembg import remove
 from torchvision import transforms
 from torch.utils.data import Dataset
+from rembg import remove as remove_bg
 from storyfave.backend.utils import *
 from transformers import AutoProcessor
 from transformers import AutoModelForCausalLM
@@ -52,7 +52,7 @@ class ImageDataset(Dataset):
         self.img_dir_path = img_dir_path 
 
         self.imgs = [
-            remove(Image.open(img).convert("RGB"))
+            remove_bg(Image.open(img).convert("RGB"))
             for img in list(Path(img_dir_path).iterdir())
         ]
 

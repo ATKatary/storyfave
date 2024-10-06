@@ -1,6 +1,6 @@
 import torch
 import numpy as np
-from rembg import remove
+from rembg import remove as remove_bg
 from storyfave.backend.utils import *
 from diffusers import DiffusionPipeline, EulerAncestralDiscreteScheduler, ControlNetModel
 
@@ -23,13 +23,18 @@ class MultiViewer(torch.nn.Module):
     def to(self, device):
         self.pipeline.to(device)
     
-def split_char_sheet(img, k_w=2, k_h=3):
+def split_char_sheet(img, k_w=2, k_h=3, rm_bg=False):
     img = np.array(img)
 
     h, w, c = img.shape
     n, m = h//k_h, w//k_w
 
-    return [
-        remove(img[i:i + n, j:j + m, :])
+    imgs = [
+        img[i:i + n, j:j + m, :]
         for j in range(0, w, m) for i in range(0, h, n)
     ]
+
+    if rm_bg:
+        imgs = [remove_bg(img) for img in imgs]
+
+    return imgs
