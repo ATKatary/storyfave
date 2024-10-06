@@ -37,4 +37,3 @@ def display(imgs, r, c=-1, w=3, h=3):
           axe.title.set_text((imgs[z]['label']))
           axe.axis("off")
     plt.show()
-

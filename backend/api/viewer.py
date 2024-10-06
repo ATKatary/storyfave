@@ -1,4 +1,6 @@
 import torch
+import numpy as np
+from rembg import remove
 from storyfave.backend.utils import *
 from diffusers import DiffusionPipeline, EulerAncestralDiscreteScheduler, ControlNetModel
 
@@ -15,9 +17,19 @@ class MultiViewer(torch.nn.Module):
 
         self.pipeline.scheduler = EulerAncestralDiscreteScheduler.from_config(self.pipeline.scheduler.config, timestep_spacing='trailing')
 
-    def forward(self, x, **kwargs):
+    def __call__(self, x, **kwargs):
         return self.pipeline(x, **kwargs).images[0]
 
     def to(self, device):
         self.pipeline.to(device)
     
+def split_char_sheet(img, k_w=2, k_h=3):
+    img = np.array(img)
+
+    h, w, c = img.shape
+    n, m = h//k_h, w//k_w
+
+    return [
+        remove(img[i:i + n, j:j + m, :])
+        for j in range(0, w, m) for i in range(0, h, n)
+    ]
