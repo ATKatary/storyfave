@@ -3,6 +3,7 @@ import torch
 import numpy as np
 from PIL import Image
 from pathlib import Path
+from rembg import remove
 from torchvision import transforms
 from torch.utils.data import Dataset
 from storyfave.backend.utils import *
@@ -51,7 +52,7 @@ class ImageDataset(Dataset):
         self.img_dir_path = img_dir_path 
 
         self.imgs = [
-            Image.open(img).convert("RGB")
+            remove(Image.open(img).convert("RGB"))
             for img in list(Path(img_dir_path).iterdir())
         ]
 
