@@ -4,6 +4,10 @@ from pathlib import Path
 from matplotlib import pyplot as plt 
 from transformers import CLIPTokenizer
 
+ZERO_PLUS = "sudo-ai/zero123plus-v1.1"
+ZERO_PLUS_CONTROLNET = "sudo-ai/controlnet-zp11-depth-v1"
+ZERO_PLUS_CONFIG = {'custom_pipeline': "sudo-ai/zero123plus-pipeline"}
+
 SDV1_5 = "runwayml/stable-diffusion-v1-5"
 OFA = "OFA-Sys/small-stable-diffusion-v0"
 SDM = "stabilityai/stable-diffusion-3-medium"

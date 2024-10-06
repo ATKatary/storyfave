@@ -46,6 +46,24 @@ class CustomDataset(Dataset):
             ).input_ids
         }
 
+class ImageDataset(Dataset):
+    def __init__(self, img_dir_path, verbose=False):
+        self.img_dir_path = img_dir_path 
+
+        self.imgs = [
+            Image.open(img).convert("RGB")
+            for img in list(Path(img_dir_path).iterdir())
+        ]
+
+        self.n = len(self.imgs)
+        self.img_transforms = transforms.Compose([transforms.ToTensor(), transforms.Normalize([0.5], [0.5])])
+    
+    def __len__(self):
+        return self.n
+
+    def __getitem__(self, i):
+        return self.imgs[i % self.n]
+
 def collate_fn(x):
     """ stacks images and prompts enabling us to load data in batches """
     img = torch.stack([x_i["img"] for x_i in x]).to(memory_format=torch.contiguous_format).float()
