@@ -13,7 +13,7 @@ class MultiViewer(torch.nn.Module):
             self.controlnet = ControlNetModel.from_pretrained(ZERO_PLUS_CONTROLNET, torch_dtype=dtype)
             self.pipeline.add_controlnet(self.controlnet, conditioning_scale=0.75)
 
-        self.pipeline.scheduler = EulerAncestralDiscreteScheduler.from_config(pipeline.scheduler.config, timestep_spacing='trailing')
+        self.pipeline.scheduler = EulerAncestralDiscreteScheduler.from_config(self.pipeline.scheduler.config, timestep_spacing='trailing')
 
     def forward(self, x, **kwargs):
         return self.pipeline(x, **kwargs).images[0]
